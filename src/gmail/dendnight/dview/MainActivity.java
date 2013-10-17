@@ -1,38 +1,52 @@
 package gmail.dendnight.dview;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.app.Activity;
 import android.view.Menu;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
-public class MainActivity extends FragmentActivity implements
-		LoaderCallbacks<Cursor> {
+public class MainActivity extends Activity {
 
-	public static final String[] STORE_IMAGES = {
-			MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-			MediaStore.Images.Media._ID };
+	/** 图片 */
+	private static final String IMAGE = "image";
 
-	private ListView listView = null;
-	private SimpleCursorAdapter simpleCursorAdapter = null;
+	/** 文件夹路径 */
+	private static final String PATH = "path";
 
+	/** 图片名称 */
+	private static final String TITLE = "title";
+
+	/** 同一文件夹下图片数量 */
+	private static final String COUNT = "count";
+
+	/** 根目录*/
+	private static final String ROOT = "/";
+	
+	/** 列表数据*/
+	private List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		listView = (ListView) findViewById(R.id.listView);
+		ListView listView = (ListView) findViewById(R.id.listView);
+		
+		SimpleAdapter simpleAdapter = new SimpleAdapter(
+				this, imageData(ROOT),
+				R.layout.activity_main_item,
+				new String[] { IMAGE, PATH, TITLE, COUNT },
+				new int[] { R.id.image, R.id.path, R.id.title,R.id.count }
+		);
 
-		simpleCursorAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_main_item, null, STORE_IMAGES, new int[] {
-						R.id.txtTitle, R.id.txtNum }, 0);
-		listView.setAdapter(simpleCursorAdapter);
-		getSupportLoaderManager().initLoader(0, null, this);
+		listView.setAdapter(simpleAdapter);
 	}
 
 	@Override
@@ -41,22 +55,45 @@ public class MainActivity extends FragmentActivity implements
 		return true;
 	}
 
-	@Override
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		CursorLoader cursorLoader = new CursorLoader(this,
-				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, STORE_IMAGES,
-				null, null, null);
-		return cursorLoader;
-	}
+	/**
+	 * 获取图片数据<br>
+	 * 判断是文件夹里是否有图片,如果有则将第一张图片生成位图显示在对应位置
+	 * @return
+	 */
+	private List<Map<String, Object>> imageData(String url) {
+		Map<String, Object> map = null;
+		File[] files = new File(url).listFiles();
 
-	@Override
-	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-		simpleCursorAdapter.swapCursor(cursor);
-	}
+		// 遍历文件系统
+		for (File file : files) {
 
-	@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
-		simpleCursorAdapter.swapCursor(null);
-	}
+			// 判断是否是文件夹
+			if(file.isDirectory()){
+				imageData(file.getAbsolutePath());
+			}
+			
+			// 判断是否是图片文件
+			if(isImage(file)){
 
+				map = new HashMap<String, Object>();
+				map.put(IMAGE, R.drawable.ic_launcher);
+				map.put(PATH, file.getAbsolutePath());
+				map.put(TITLE, file.getName());
+				map.put(COUNT, file.length());
+
+				list.add(map);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 是图片文件,且后缀为正常图片后缀
+	 * @param file
+	 * @return
+	 */
+	private boolean isImage(File file){
+        
+		return true;
+    }  
 }

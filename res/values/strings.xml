@@ -3,5 +3,6 @@
 
     <string name="app_name">view</string>
     <string name="action_exit">Exit</string>
+    <string name="action_image">image</string>
 
 </resources>
