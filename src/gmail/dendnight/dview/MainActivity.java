@@ -7,6 +7,8 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -67,12 +69,12 @@ public class MainActivity extends Activity {
 		String sqlCount = "COUNT(" + MediaStore.Images.Media._ID + ") as " + COUNT;
 
 		// 缩略图路径
-		String thumbnailUrl = "(SELECT " + MediaStore.Images.Thumbnails.DATA
+		String thumbnailPath = "(SELECT " + MediaStore.Images.Thumbnails.DATA
 				+ " FROM thumbnails WHERE thumbnails.image_id = images._id) AS " + THUMBNAIL;
 
 		// 图片所需字段
 		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-				MediaStore.Images.Media.DATE_MODIFIED, MediaStore.Images.Media.DATA, sqlCount, thumbnailUrl };
+				MediaStore.Images.Media.DATE_MODIFIED, MediaStore.Images.Media.DATA, sqlCount, thumbnailPath };
 
 		// 按文件夹分组
 		String where = " 0 = 0 ) GROUP BY (" + MediaStore.Images.Media.BUCKET_DISPLAY_NAME;
@@ -85,10 +87,23 @@ public class MainActivity extends Activity {
 
 		while (cursor.moveToNext()) {
 
-			// 父文件夹路径
+			// 原图片路径
 			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-			// /storage/sdcard/2343311610103519.jpg 去掉文件名
-			path = path.substring(0, path.lastIndexOf("/") + 1);
+
+			// 缩略图路径
+			String tPath = cursor.getString(cursor.getColumnIndex(THUMBNAIL));
+
+			// 缩略图
+			Bitmap bitmap = null;
+			if (null != tPath && "" != tPath.trim()) {
+				bitmap = BitmapFactory.decodeFile(path);
+			}
+
+			// 父文件夹路径 "/storage/sdcard/DCIM/2343311610103519.jpg"; "/sdcard/"
+			if (path.startsWith("/storage/")) {
+				path = path.substring(8, path.lastIndexOf("/"));
+				path = path.substring(0, path.lastIndexOf("/") + 1);
+			}
 
 			// 文件夹标题
 			String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
@@ -96,10 +111,8 @@ public class MainActivity extends Activity {
 			// 同一文件夹图片数量
 			String count = "(" + cursor.getString(cursor.getColumnIndex(COUNT)) + ")";
 
-			// 缩略图
-
 			map = new HashMap<String, Object>();
-			map.put(IMAGE, R.drawable.ic_launcher);
+			map.put(IMAGE, tPath);
 			map.put(PATH, path);
 			map.put(TITLE, title);
 			map.put(COUNT, count);
