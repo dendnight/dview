@@ -40,23 +40,23 @@ public class BitmapUtil {
 		// 计算inSampleSize
 		options.inSampleSize = calculateInSampleSize(options, reqHeight, reqHeight);
 		options.inJustDecodeBounds = false;
-		return ImageCrop(BitmapFactory.decodeFile(path, options));
+		return BitmapFactory.decodeFile(path, options);
 	}
 
-	/**
-	 * 按正方形裁切图片
-	 */
-	private static Bitmap ImageCrop(Bitmap bitmap) {
-		int w = bitmap.getWidth(); // 得到图片的宽，高
-		int h = bitmap.getHeight();
-
-		int wh = w > h ? h : w;// 裁切后所取的正方形区域边长
-
-		int retX = w > h ? (w - h) / 2 : 0;// 基于原图，取正方形左上角x坐标
-		int retY = w > h ? 0 : (h - w) / 2;
-
-		return Bitmap.createBitmap(bitmap, retX, retY, wh, wh, null, false);
-	}
+	// /**
+	// * 按正方形裁切图片
+	// */
+	// private static Bitmap ImageCrop(Bitmap bitmap) {
+	// int w = bitmap.getWidth(); // 得到图片的宽，高
+	// int h = bitmap.getHeight();
+	//
+	// int wh = w > h ? h : w;// 裁切后所取的正方形区域边长
+	//
+	// int retX = w > h ? (w - h) / 2 : 0;// 基于原图，取正方形左上角x坐标
+	// int retY = w > h ? 0 : (h - w) / 2;
+	//
+	// return Bitmap.createBitmap(bitmap, retX, retY, wh, wh, null, false);
+	// }
 
 	/**
 	 * 计算inSampleSize
@@ -74,7 +74,7 @@ public class BitmapUtil {
 
 		if (height > reqHeight || width > reqWidth) {
 
-			// 计算比率的高度和宽度,高度和宽度要求
+			// 计算高度和宽度的比率,高度和宽度要求
 			final int heightRatio = Math.round((float) height / (float) reqHeight);
 			final int widthRatio = Math.round((float) width / (float) reqWidth);
 

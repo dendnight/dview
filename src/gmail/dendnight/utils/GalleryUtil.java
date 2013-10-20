@@ -56,13 +56,13 @@ public class GalleryUtil {
 
 		// 图片所需字段
 		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-				MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.Media.DATA, sqlCount };
+				MediaStore.Images.Media.DATE_TAKEN, MediaStore.Images.Media.DATA, sqlCount };
 
 		// 按文件夹分组
 		String where = " 0 = 0 ) GROUP BY (" + MediaStore.Images.Media.BUCKET_DISPLAY_NAME;
 
-		// 按文件夹分组
-		String orderBy = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " asc";
+		// 按添加时间排序
+		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " desc";
 
 		// 查询
 		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
@@ -79,8 +79,11 @@ public class GalleryUtil {
 			if (path.startsWith("/storage/")) {
 				path = path.substring(8, path.lastIndexOf("/"));
 				path = path.substring(0, path.lastIndexOf("/") + 1);
+			} else if (path.startsWith("/mnt/")) {
+				path = path.substring(4, path.lastIndexOf("/"));
+				path = path.substring(0, path.lastIndexOf("/") + 1);
 			} else {
-				path = path.substring(0, path.lastIndexOf("/"));
+				path = path.substring(4, path.lastIndexOf("/"));
 				path = path.substring(0, path.lastIndexOf("/") + 1);
 			}
 
@@ -91,11 +94,11 @@ public class GalleryUtil {
 			String count = "(" + cursor.getString(cursor.getColumnIndex(DictParam.COUNT)) + ")";
 
 			// 最后编辑时间
-			long added = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
+			long added = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
 			Calendar ca = Calendar.getInstance();
 			ca.setTimeInMillis(added);
 
-			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 			String date = f.format(ca.getTime());
 
 			map = new HashMap<String, Object>();

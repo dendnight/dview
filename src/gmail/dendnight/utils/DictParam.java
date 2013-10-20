@@ -33,9 +33,9 @@ public class DictParam {
 	public static final String DATE = "date";
 
 	/** Í¼Æ¬¸ß¶È */
-	public static final Integer HEIGHT = 80;
+	public static final Integer HEIGHT = 96;
 
 	/** Í¼Æ¬¿í¶È */
-	public static final Integer WIDTH = 80;
+	public static final Integer WIDTH = 128;
 
 }
