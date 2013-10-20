@@ -15,7 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/action_image"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:background="@drawable/ic_launcher"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -36,12 +39,15 @@
                 android:id="@+id/count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp" 
-                android:layout_marginBottom="15dp"/>
+                android:layout_marginLeft="5dp" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/path"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent" />
+        <TextView
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent" />
     </LinearLayout>
