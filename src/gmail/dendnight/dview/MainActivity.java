@@ -1,10 +1,19 @@
 package gmail.dendnight.dview;
 
-import gmail.dendnight.dview.R;
+import gmail.dendnight.utils.DictParam;
 import gmail.dendnight.utils.GalleryUtil;
+
+import java.util.Map;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 /**
@@ -26,6 +35,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// Òþ²Ø×´Ì¬À¸
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 
 		// É¨ÃèÍ¼Æ¬
@@ -40,12 +51,38 @@ public class MainActivity extends Activity {
 		MainAdapter mainAdapter = new MainAdapter(this, GalleryUtil.mainGallery(this.getContentResolver()));
 
 		listView.setAdapter(mainAdapter);
+
+		// µã»÷itemÌø×ª
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onItemClick(AdapterView<?> adapterview, View view, int position, long l) {
+
+				Map<String, Object> hashMap = (Map<String, Object>) adapterview.getAdapter().getItem(position);
+
+				Intent intent = new Intent();
+				intent.putExtra(DictParam.TITLE, (String) hashMap.get(DictParam.TITLE));
+				intent.setClass(MainActivity.this, ListActivity.class);
+				startActivity(intent);
+			}
+		});
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// ÍË³ö
+		if (item.getItemId() == R.id.action_exit) {
+			MainActivity.this.finish();
+		}
+		return super.onMenuItemSelected(featureId, item);
 	}
 
 }

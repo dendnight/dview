@@ -34,13 +34,32 @@ public class MainAdapter extends BaseAdapter {
 
 	private LayoutInflater mainContainer; // 视图容器
 
-	// 自定义控件集合
+	/**
+	 * 自定义控件集合
+	 * 
+	 * <pre>
+	 * Description
+	 * Author:		dendnight
+	 * Version:		1.0  
+	 * Create at:	2013年10月21日 下午2:25:48  
+	 *  
+	 * 修改历史:
+	 * 日期    作者    版本  修改描述
+	 * ------------------------------------------------------------------
+	 * 
+	 * </pre>
+	 */
 	public final class ListItemView {
-		public ImageView image;// 图片
-		public TextView title;// 文件夹名
-		public TextView count;// 图片数量
-		public TextView path;// 图片父文件夹
-		public TextView date;// 最后修改时间
+		/** 图片 */
+		public ImageView image;
+		/** 文件夹名 */
+		public TextView title;
+		/** 图片数量 */
+		public TextView count;
+		/** 图片父文件夹 */
+		public TextView path;
+		/** 最后修改时间 */
+		public TextView date;
 	}
 
 	public MainAdapter(Context context, List<Map<String, Object>> listItem) {

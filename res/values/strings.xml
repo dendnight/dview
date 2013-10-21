@@ -2,7 +2,14 @@
 <resources>
 
     <string name="app_name">DView</string>
+    <string name="action_version">V1.0</string>
     <string name="action_exit">Exit</string>
     <string name="action_image">image</string>
+    <string name="action_exit_title">提示</string>
+    <string name="action_exit_mssage">确定要退出?</string>
+    <string name="action_ok">确定</string>
+    <string name="action_cancel">取消</string>
+
+    <color name="blue">#00a0de</color>
 
 </resources>

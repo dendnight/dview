@@ -17,6 +17,9 @@ package gmail.dendnight.utils;
  */
 public class DictParam {
 
+	/** 首页启动时间 */
+	public static final int START_DISPLAY_LENGHT = 500;
+
 	/** 文件标题 */
 	public static final String TITLE = "title";
 
