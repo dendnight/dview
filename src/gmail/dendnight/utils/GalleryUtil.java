@@ -54,10 +54,14 @@ public class GalleryUtil {
 		// 文件夹下的图片数量
 		String sqlCount = "COUNT(" + MediaStore.Images.Media._ID + ") as " + DictParam.COUNT;
 
+		// 缩略图路径
+		String thumbnailUrl = "(SELECT _data FROM thumbnails WHERE thumbnails.image_id = images._id) AS "
+				+ DictParam.THUMBNAIL;
+
 		// 图片所需字段
 		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
 				MediaStore.Images.Media.DATE_TAKEN, MediaStore.Images.Media.DATA, sqlCount,
-				MediaStore.Images.Media.BUCKET_ID };
+				MediaStore.Images.Media.BUCKET_ID, thumbnailUrl };
 
 		// 按文件夹分组
 		String where = " 0 = 0 ) GROUP BY (" + MediaStore.Images.Media.BUCKET_DISPLAY_NAME;
@@ -72,8 +76,13 @@ public class GalleryUtil {
 			// 原图片路径
 			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
 
-			// 缩略图
-			Bitmap bitmap = BitmapUtil.getBitmap(path, DictParam.WIDTH, DictParam.HEIGHT);
+			// 缩略图路径
+			String thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
+			if (null == thumbnail || "".equals(thumbnail.trim())) {
+				thumbnail = path;
+			}
+			// 位图
+			Bitmap bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
 
 			// 父文件夹路径 "/storage/sdcard/DCIM/2343311610103519.jpg"; "/sdcard/"
 			if (path.startsWith("/storage/")) {
@@ -121,16 +130,19 @@ public class GalleryUtil {
 	}
 
 	public static List<Map<String, Object>> listGallery(ContentResolver contentResolver, String folderId) {
-
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = null;
 
 		// 图片路径
 		Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
+		// 缩略图路径
+		String thumbnailUrl = "(SELECT _data FROM thumbnails WHERE thumbnails.image_id = images._id) AS "
+				+ DictParam.THUMBNAIL;
+
 		// 图片所需字段
 		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_TAKEN,
-				MediaStore.Images.Media.DATA };
+				MediaStore.Images.Media.DATA, thumbnailUrl };
 
 		// 按文件夹查询
 		String where = MediaStore.Images.Media.BUCKET_ID + "= '" + folderId + "' ";
@@ -140,13 +152,19 @@ public class GalleryUtil {
 
 		// 查询
 		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
+		String oldDate = null;
 		while (cursor.moveToNext()) {
 
 			// 原图片路径
 			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
 
-			// 缩略图
-			Bitmap bitmap = BitmapUtil.getBitmap(path, DictParam.WIDTH, DictParam.HEIGHT);
+			// 缩略图路径
+			String thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
+			if (null == thumbnail || "".equals(thumbnail.trim())) {
+				thumbnail = path;
+			}
+			// 位图
+			Bitmap bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
 
 			// 最后编辑时间
 			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
@@ -158,9 +176,13 @@ public class GalleryUtil {
 
 			map = new HashMap<String, Object>();
 			map.put(DictParam.IMAGE, bitmap);
-			map.put(DictParam.PATH, path);
 
-			map.put(DictParam.DATE, date);
+			if (null == oldDate || !oldDate.equals(date.trim())) {
+				map.put(DictParam.DATE, date);
+			}
+			oldDate = date;
+
+			map.put(DictParam.PATH, path);
 			list.add(map);
 		}
 		// 关闭cursor

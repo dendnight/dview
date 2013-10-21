@@ -6,11 +6,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ListView;
 
 /**
  * 图库列表
@@ -32,22 +30,24 @@ public class ListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// 隐藏状态栏
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
 		setContentView(R.layout.activity_list);
+
+		// 容器
+		ListView listView = (ListView) findViewById(R.id.list_listView);
+
+		// 获取值
 		Intent intent = getIntent();
 		String folderId = intent.getStringExtra(DictParam.FOLDER_ID);
-		Toast.makeText(getApplicationContext(), "选中:" + folderId, Toast.LENGTH_SHORT).show();
 
-		GridView gridView = (GridView) findViewById(R.id.list_gridView);
-
+		// 值
 		ListAdapter listAdapter = new ListAdapter(getApplicationContext(), GalleryUtil.listGallery(
 				getContentResolver(), folderId));
 
-		gridView.setAdapter(listAdapter);
+		// 设置值至GridView容器
+		listView.setAdapter(listAdapter);
 
-		gridView.setOnItemClickListener(new OnItemClickListener() {
+		// 绑定单击事件
+		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapterview, View view, int position, long l) {

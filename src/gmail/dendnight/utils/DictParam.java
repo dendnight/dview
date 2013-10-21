@@ -44,8 +44,11 @@ public class DictParam {
 	/** 文件夹编号 */
 	public static final String FOLDER_ID = "folderId";
 
+	/** 缩略图路径 */
+	public static final String THUMBNAIL = "thumbnail";
+
 	/** 图片高度 */
-	public static final Integer HEIGHT = 96;
+	public static final Integer HEIGHT = 128;
 
 	/** 图片宽度 */
 	public static final Integer WIDTH = 128;

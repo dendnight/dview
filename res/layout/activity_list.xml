@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <GridView
-        android:id="@+id/list_gridView"
+    <ListView
+        android:id="@+id/list_listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="3" >
-    </GridView>
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>
