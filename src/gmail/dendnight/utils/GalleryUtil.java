@@ -56,7 +56,8 @@ public class GalleryUtil {
 
 		// 图片所需字段
 		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-				MediaStore.Images.Media.DATE_TAKEN, MediaStore.Images.Media.DATA, sqlCount };
+				MediaStore.Images.Media.DATE_TAKEN, MediaStore.Images.Media.DATA, sqlCount,
+				MediaStore.Images.Media.BUCKET_ID };
 
 		// 按文件夹分组
 		String where = " 0 = 0 ) GROUP BY (" + MediaStore.Images.Media.BUCKET_DISPLAY_NAME;
@@ -66,7 +67,6 @@ public class GalleryUtil {
 
 		// 查询
 		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
-		// ImageView imageView = null;
 		while (cursor.moveToNext()) {
 
 			// 原图片路径
@@ -88,27 +88,79 @@ public class GalleryUtil {
 			}
 
 			// 文件夹标题
-			String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+			String folder = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
 
 			// 同一文件夹图片数量
 			String count = "(" + cursor.getString(cursor.getColumnIndex(DictParam.COUNT)) + ")";
 
 			// 最后编辑时间
-			long added = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
 			Calendar ca = Calendar.getInstance();
-			ca.setTimeInMillis(added);
+			ca.setTimeInMillis(taken);
 
 			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 			String date = f.format(ca.getTime());
 
+			// 文件夹编号
+			String folderId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
+
 			map = new HashMap<String, Object>();
 			map.put(DictParam.IMAGE, bitmap);
-			map.put(DictParam.TITLE, title);
+			map.put(DictParam.FOLDER, folder);
 
 			map.put(DictParam.COUNT, count);
 			map.put(DictParam.PATH, path);
 			map.put(DictParam.DATE, date);
 
+			map.put(DictParam.FOLDER_ID, folderId);
+			list.add(map);
+		}
+		// 关闭cursor
+		cursor.close();
+		return list;
+	}
+
+	public static List<Map<String, Object>> listGallery(ContentResolver contentResolver, String folderId) {
+
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = null;
+
+		// 图片路径
+		Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+		// 图片所需字段
+		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_TAKEN,
+				MediaStore.Images.Media.DATA };
+
+		// 按文件夹查询
+		String where = MediaStore.Images.Media.BUCKET_ID + "= '" + folderId + "' ";
+
+		// 按添加时间排序
+		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " desc";
+
+		// 查询
+		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
+		while (cursor.moveToNext()) {
+
+			// 原图片路径
+			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+
+			// 缩略图
+			Bitmap bitmap = BitmapUtil.getBitmap(path, DictParam.WIDTH, DictParam.HEIGHT);
+
+			// 最后编辑时间
+			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+			Calendar ca = Calendar.getInstance();
+			ca.setTimeInMillis(taken);
+
+			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+			String date = f.format(ca.getTime());
+
+			map = new HashMap<String, Object>();
+			map.put(DictParam.IMAGE, bitmap);
+			map.put(DictParam.PATH, path);
+
+			map.put(DictParam.DATE, date);
 			list.add(map);
 		}
 		// 关闭cursor

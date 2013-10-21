@@ -7,7 +7,7 @@
     tools:context=".MainActivity" >
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/main_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginLeft="5dp"
@@ -27,7 +27,7 @@
             android:layout_height="fill_parent" >
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/main_folder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
@@ -35,7 +35,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/count"
+                android:id="@+id/main_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -43,13 +43,13 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/path"
+            android:id="@+id/main_path"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_marginBottom="5dp" />
 
         <TextView
-            android:id="@+id/date"
+            android:id="@+id/main_date"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent" />
     </LinearLayout>

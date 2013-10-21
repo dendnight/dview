@@ -23,6 +23,9 @@ public class DictParam {
 	/** 文件标题 */
 	public static final String TITLE = "title";
 
+	/** 文件名 */
+	public static final String NAME = "name";
+
 	/** 文件路径 */
 	public static final String PATH = "path";
 
@@ -34,6 +37,12 @@ public class DictParam {
 
 	/** 添加时间 */
 	public static final String DATE = "date";
+
+	/** 文件夹 */
+	public static final String FOLDER = "folder";
+
+	/** 文件夹编号 */
+	public static final String FOLDER_ID = "folderId";
 
 	/** 图片高度 */
 	public static final Integer HEIGHT = 96;
