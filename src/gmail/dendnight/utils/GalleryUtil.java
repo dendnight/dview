@@ -32,13 +32,6 @@ import android.provider.MediaStore;
 public class GalleryUtil {
 
 	/**
-	 * 扫描图片
-	 */
-	public static void ss() {
-
-	}
-
-	/**
 	 * 获取主页相关数据
 	 * 
 	 * @param contentResolver
@@ -129,7 +122,18 @@ public class GalleryUtil {
 		return list;
 	}
 
+	/**
+	 * 网格数据
+	 * 
+	 * @param contentResolver
+	 * @param folderId
+	 * @return
+	 */
 	public static List<Map<String, Object>> listGallery(ContentResolver contentResolver, String folderId) {
+		if (null == folderId || "".equals(folderId.trim())) {
+			return null;
+		}
+
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = null;
 
@@ -141,8 +145,7 @@ public class GalleryUtil {
 				+ DictParam.THUMBNAIL;
 
 		// 图片所需字段
-		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_TAKEN,
-				MediaStore.Images.Media.DATA, thumbnailUrl };
+		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA, thumbnailUrl };
 
 		// 按文件夹查询
 		String where = MediaStore.Images.Media.BUCKET_ID + "= '" + folderId + "' ";
@@ -152,7 +155,6 @@ public class GalleryUtil {
 
 		// 查询
 		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
-		String oldDate = null;
 		while (cursor.moveToNext()) {
 
 			// 原图片路径
@@ -166,21 +168,8 @@ public class GalleryUtil {
 			// 位图
 			Bitmap bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
 
-			// 最后编辑时间
-			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
-			Calendar ca = Calendar.getInstance();
-			ca.setTimeInMillis(taken);
-
-			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-			String date = f.format(ca.getTime());
-
 			map = new HashMap<String, Object>();
 			map.put(DictParam.IMAGE, bitmap);
-
-			if (null == oldDate || !oldDate.equals(date.trim())) {
-				map.put(DictParam.DATE, date);
-			}
-			oldDate = date;
 
 			map.put(DictParam.PATH, path);
 			list.add(map);
@@ -188,5 +177,30 @@ public class GalleryUtil {
 		// 关闭cursor
 		cursor.close();
 		return list;
+	}
+
+	public static Cursor webGallery(ContentResolver contentResolver, String folderId) {
+		if (null == folderId || "".equals(folderId.trim())) {
+			return null;
+		}
+
+		// 图片路径
+		Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+		// 缩略图路径
+		String thumbnailUrl = "(SELECT _data FROM thumbnails WHERE thumbnails.image_id = images._id) AS "
+				+ DictParam.THUMBNAIL;
+		// 图片所需字段
+		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_TAKEN,
+				MediaStore.Images.Media.DATA, thumbnailUrl };
+
+		// 按文件夹查询
+		String where = MediaStore.Images.Media.BUCKET_ID + "= '" + folderId + "' ";
+
+		// 按添加时间排序
+		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " desc";
+
+		// 查询
+		return MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
+
 	}
 }

@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import android.widget.GridView;
 
 /**
  * 图库列表
@@ -33,7 +33,7 @@ public class ListActivity extends Activity {
 		setContentView(R.layout.activity_list);
 
 		// 容器
-		ListView listView = (ListView) findViewById(R.id.list_listView);
+		GridView gridView = (GridView) findViewById(R.id.gridView);
 
 		// 获取值
 		Intent intent = getIntent();
@@ -44,10 +44,10 @@ public class ListActivity extends Activity {
 				getContentResolver(), folderId));
 
 		// 设置值至GridView容器
-		listView.setAdapter(listAdapter);
+		gridView.setAdapter(listAdapter);
 
 		// 绑定单击事件
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		gridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapterview, View view, int position, long l) {

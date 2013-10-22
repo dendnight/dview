@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 		// + Environment.getExternalStorageDirectory())));
 
 		// 列表
-		ListView listView = (ListView) findViewById(R.id.main_listView);
+		ListView listView = (ListView) findViewById(R.id.listView);
 
 		// 自定义适配器
 		MainAdapter mainAdapter = new MainAdapter(this, GalleryUtil.mainGallery(this.getContentResolver()));
@@ -60,7 +60,8 @@ public class MainActivity extends Activity {
 
 				Intent intent = new Intent();
 				intent.putExtra(DictParam.FOLDER_ID, (String) hashMap.get(DictParam.FOLDER_ID));
-				intent.setClass(MainActivity.this, ListActivity.class);
+				// intent.setClass(MainActivity.this, ListActivity.class);
+				intent.setClass(MainActivity.this, WebActivity.class);
 				startActivity(intent);
 			}
 		});

@@ -24,6 +24,8 @@
         </activity>
         <activity android:name="gmail.dendnight.dview.ListActivity" >
         </activity>
+        <activity android:name="gmail.dendnight.dview.WebActivity" >
+        </activity>
     </application>
 
 </manifest>

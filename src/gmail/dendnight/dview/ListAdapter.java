@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 /**
  * 
@@ -52,8 +51,6 @@ public class ListAdapter extends BaseAdapter {
 	public final class ListItemView {
 		/** 图片 */
 		public ImageView image;
-		/** 时间 */
-		public TextView date;
 		/** 图片路径 */
 		private String path;
 
@@ -99,7 +96,6 @@ public class ListAdapter extends BaseAdapter {
 			// 创建自定义视图
 			listItemView = new ListItemView();
 			listItemView.image = (ImageView) convertView.findViewById(R.id.list_image);
-			listItemView.date = (TextView) convertView.findViewById(R.id.list_date);
 
 			// 设置自定义视图至布局文件
 			convertView.setTag(listItemView);
@@ -110,7 +106,6 @@ public class ListAdapter extends BaseAdapter {
 
 		// 设置值
 		listItemView.image.setImageBitmap((Bitmap) listItem.get(position).get(DictParam.IMAGE));
-		listItemView.date.setText((String) listItem.get(position).get(DictParam.DATE));
 		listItemView.setPath((String) listItem.get(position).get(DictParam.PATH));
 		return convertView;
 	}
