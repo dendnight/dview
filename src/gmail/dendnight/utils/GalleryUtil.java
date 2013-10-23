@@ -37,7 +37,7 @@ public class GalleryUtil {
 	 * @param contentResolver
 	 * @return
 	 */
-	public static List<Map<String, Object>> mainGallery(ContentResolver contentResolver) {
+	public static List<Map<String, Object>> listData(ContentResolver contentResolver) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = null;
 
@@ -129,7 +129,7 @@ public class GalleryUtil {
 	 * @param folderId
 	 * @return
 	 */
-	public static List<Map<String, Object>> listGallery(ContentResolver contentResolver, String folderId) {
+	public static List<Map<String, Object>> gridData(ContentResolver contentResolver, String folderId) {
 		if (null == folderId || "".equals(folderId.trim())) {
 			return null;
 		}
@@ -145,7 +145,8 @@ public class GalleryUtil {
 				+ DictParam.THUMBNAIL;
 
 		// 图片所需字段
-		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA, thumbnailUrl };
+		String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA,
+				MediaStore.Images.Media.DATE_TAKEN, thumbnailUrl };
 
 		// 按文件夹查询
 		String where = MediaStore.Images.Media.BUCKET_ID + "= '" + folderId + "' ";
@@ -155,6 +156,7 @@ public class GalleryUtil {
 
 		// 查询
 		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
+		String oldDate = null;
 		while (cursor.moveToNext()) {
 
 			// 原图片路径
@@ -168,9 +170,23 @@ public class GalleryUtil {
 			// 位图
 			Bitmap bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
 
+			// 最后编辑时间
+			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+			Calendar ca = Calendar.getInstance();
+			ca.setTimeInMillis(taken);
+
+			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+			String date = f.format(ca.getTime());
+
 			map = new HashMap<String, Object>();
 			map.put(DictParam.IMAGE, bitmap);
-
+			// 时间相同的图片
+			if (null == oldDate || !oldDate.equals(date)) {
+				map.put(DictParam.DATE, date);
+			}
+			if (null != date) {
+				oldDate = date;
+			}
 			map.put(DictParam.PATH, path);
 			list.add(map);
 		}
@@ -179,6 +195,13 @@ public class GalleryUtil {
 		return list;
 	}
 
+	/**
+	 * 按文件夹ID查询对应数据
+	 * 
+	 * @param contentResolver
+	 * @param folderId
+	 * @return
+	 */
 	public static Cursor webGallery(ContentResolver contentResolver, String folderId) {
 		if (null == folderId || "".equals(folderId.trim())) {
 			return null;

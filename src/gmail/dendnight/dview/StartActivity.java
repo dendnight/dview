@@ -35,7 +35,7 @@ public class StartActivity extends Activity {
 			@Override
 			public void run() {
 				Intent intent = new Intent();
-				intent.setClass(StartActivity.this, MainActivity.class);
+				intent.setClass(StartActivity.this, ListActivity.class);
 				StartActivity.this.startActivity(intent);
 				StartActivity.this.finish();
 			}

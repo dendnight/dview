@@ -20,9 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="gmail.dendnight.dview.MainActivity" >
-        </activity>
         <activity android:name="gmail.dendnight.dview.ListActivity" >
+        </activity>
+        <activity android:name="gmail.dendnight.dview.GridActivity" >
         </activity>
         <activity android:name="gmail.dendnight.dview.WebActivity" >
         </activity>
