@@ -3,6 +3,9 @@ package gmail.dendnight.dview.ui;
 import gmail.dendnight.dview.R;
 import gmail.dendnight.dview.data.Images;
 import gmail.dendnight.dview.dict.DictParam;
+
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,18 +44,24 @@ public class GridActivity extends Activity {
 		String folderId = intent.getStringExtra(DictParam.FOLDER_ID);
 
 		// 值
-		GridAdapter listAdapter = new GridAdapter(getApplicationContext(), Images.gridData(getContentResolver(),
+		GridAdapter gridAdapter = new GridAdapter(getApplicationContext(), Images.gridData(getContentResolver(),
 				folderId));
 
 		// 设置值至GridView容器
-		gridView.setAdapter(listAdapter);
+		gridView.setAdapter(gridAdapter);
 
 		// 绑定单击事件
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapterview, View view, int position, long l) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> hashMap = (Map<String, Object>) adapterview.getAdapter().getItem(position);
 
+				Intent i = new Intent();
+				i.putExtra(DictParam.PATH, (String) hashMap.get(DictParam.PATH));
+				i.setClass(GridActivity.this, DetailActivity.class);
+				startActivity(i);
 			}
 		});
 	}

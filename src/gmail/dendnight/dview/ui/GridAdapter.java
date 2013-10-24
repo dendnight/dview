@@ -54,7 +54,7 @@ public class GridAdapter extends BaseAdapter {
 	public final class ListItemView {
 		/** 图片 */
 		public ImageView image;
-		/***/
+		/** 时间 */
 		public TextView date;
 		/** 图片路径 */
 		private String path;
@@ -101,8 +101,7 @@ public class GridAdapter extends BaseAdapter {
 			// 创建自定义视图
 			listItemView = new ListItemView();
 			listItemView.image = (ImageView) convertView.findViewById(R.id.grid_image);
-			// listItemView.date = (TextView)
-			// convertView.findViewById(R.id.list_title);
+			listItemView.date = (TextView) convertView.findViewById(R.id.list_title);
 			// 设置自定义视图至布局文件
 			convertView.setTag(listItemView);
 
