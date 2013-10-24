@@ -1,7 +1,8 @@
-package gmail.dendnight.dview;
+package gmail.dendnight.dview.ui;
 
-import gmail.dendnight.utils.DictParam;
-import gmail.dendnight.utils.GalleryUtil;
+import gmail.dendnight.dview.R;
+import gmail.dendnight.dview.data.Images;
+import gmail.dendnight.dview.dict.DictParam;
 
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class ListActivity extends Activity {
 		ListView listView = (ListView) findViewById(R.id.listView);
 
 		// ◊‘∂®“Â  ≈‰∆˜
-		ListAdapter mainAdapter = new ListAdapter(this, GalleryUtil.listData(this.getContentResolver()));
+		ListAdapter mainAdapter = new ListAdapter(this, Images.listData(this.getContentResolver()));
 
 		listView.setAdapter(mainAdapter);
 

@@ -1,7 +1,7 @@
-package gmail.dendnight.utils;
+package gmail.dendnight.dview.dict;
 
 /**
- * 字典及参数
+ * 字典参数
  * 
  * <pre>
  * Description

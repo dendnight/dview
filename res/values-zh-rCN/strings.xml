@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">看图</string>
+    <string name="action_version">V1.0</string>
+    <string name="action_exit">退出</string>
+    <string name="action_image">图片</string>
+    <string name="action_ok">确定</string>
+    <string name="action_cancel">取消</string>
+
+</resources>

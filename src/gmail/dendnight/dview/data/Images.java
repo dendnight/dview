@@ -1,4 +1,7 @@
-package gmail.dendnight.utils;
+package gmail.dendnight.dview.data;
+
+import gmail.dendnight.dview.dict.DictParam;
+import gmail.dendnight.dview.utils.BitmapUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +18,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 /**
- * 图库相关工具
+ * 图片数据
  * 
  * <pre>
  * Description
@@ -29,7 +32,7 @@ import android.provider.MediaStore;
  * 
  * </pre>
  */
-public class GalleryUtil {
+public class Images {
 
 	/**
 	 * 获取主页相关数据

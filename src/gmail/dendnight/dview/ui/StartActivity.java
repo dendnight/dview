@@ -1,6 +1,7 @@
-package gmail.dendnight.dview;
+package gmail.dendnight.dview.ui;
 
-import gmail.dendnight.utils.DictParam;
+import gmail.dendnight.dview.R;
+import gmail.dendnight.dview.dict.DictParam;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

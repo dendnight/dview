@@ -1,7 +1,8 @@
-package gmail.dendnight.dview;
+package gmail.dendnight.dview.ui;
 
-import gmail.dendnight.utils.DictParam;
-import gmail.dendnight.utils.GalleryUtil;
+import gmail.dendnight.dview.R;
+import gmail.dendnight.dview.data.Images;
+import gmail.dendnight.dview.dict.DictParam;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,6 +15,21 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.webkit.WebView;
 
+/**
+ * 网页显示
+ * 
+ * <pre>
+ * Description
+ * Author:		dendnight
+ * Version:		1.0  
+ * Create at:	2013年10月24日 上午11:00:46  
+ *  
+ * 修改历史:
+ * 日期    作者    版本  修改描述
+ * ------------------------------------------------------------------
+ * 
+ * </pre>
+ */
 public class WebActivity extends Activity {
 
 	@Override
@@ -24,7 +40,7 @@ public class WebActivity extends Activity {
 		// 获取值
 		Intent intent = getIntent();
 		String folderId = intent.getStringExtra(DictParam.FOLDER_ID);
-		Cursor cursor = GalleryUtil.webGallery(getContentResolver(), folderId);
+		Cursor cursor = Images.webGallery(getContentResolver(), folderId);
 
 		StringBuilder data = new StringBuilder();
 		data.append("<html><head><title>list</title><meta name=\"Author\" content=\"dendnight\"></head><body>");

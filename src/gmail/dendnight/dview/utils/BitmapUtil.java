@@ -1,10 +1,10 @@
-package gmail.dendnight.utils;
+package gmail.dendnight.dview.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 /**
- * 位图相关工具
+ * 位图工具
  * 
  * <pre>
  * Description

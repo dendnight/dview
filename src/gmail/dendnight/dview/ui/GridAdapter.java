@@ -1,6 +1,7 @@
-package gmail.dendnight.dview;
+package gmail.dendnight.dview.ui;
 
-import gmail.dendnight.utils.DictParam;
+import gmail.dendnight.dview.R;
+import gmail.dendnight.dview.dict.DictParam;
 
 import java.util.List;
 import java.util.Map;
@@ -15,12 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
+ * 自定义网格
  * 
  * <pre>
  * Description
  * Author:		dendnight
  * Version:		1.0  
- * Create at:	2013年10月20日 下午2:35:30  
+ * Create at:	2013年10月21日 下午3:26:33  
  *  
  * 修改历史:
  * 日期    作者    版本  修改描述
@@ -28,11 +30,11 @@ import android.widget.TextView;
  * 
  * </pre>
  */
-public class ListAdapter extends BaseAdapter {
+public class GridAdapter extends BaseAdapter {
 
 	private List<Map<String, Object>> listItem;// 数据集
 
-	private LayoutInflater mainContainer; // 视图容器
+	private LayoutInflater listContainer; // 视图容器
 
 	/**
 	 * 自定义控件集合
@@ -52,29 +54,23 @@ public class ListAdapter extends BaseAdapter {
 	public final class ListItemView {
 		/** 图片 */
 		public ImageView image;
-		/** 文件夹名 */
-		public TextView folder;
-		/** 图片数量 */
-		public TextView count;
-		/** 图片父文件夹 */
-		public TextView path;
-		/** 最后修改时间 */
+		/***/
 		public TextView date;
-		/** 文件夹编号 */
-		private String folderId;
+		/** 图片路径 */
+		private String path;
 
-		public String getFolderId() {
-			return folderId;
+		public String getPath() {
+			return path;
 		}
 
-		public void setFolderId(String folderId) {
-			this.folderId = folderId;
+		public void setPath(String path) {
+			this.path = path;
 		}
 
 	}
 
-	public ListAdapter(Context context, List<Map<String, Object>> listItem) {
-		this.mainContainer = LayoutInflater.from(context);
+	public GridAdapter(Context context, List<Map<String, Object>> listItem) {
+		this.listContainer = LayoutInflater.from(context);
 		this.listItem = listItem;
 	}
 
@@ -100,17 +96,13 @@ public class ListAdapter extends BaseAdapter {
 
 		if (null == convertView) {
 			// 获取布局文件视图
-			convertView = mainContainer.inflate(R.layout.activity_list_item, null);
+			convertView = listContainer.inflate(R.layout.activity_grid_item, null);
 
 			// 创建自定义视图
 			listItemView = new ListItemView();
-			listItemView.image = (ImageView) convertView.findViewById(R.id.list_image);
-			listItemView.folder = (TextView) convertView.findViewById(R.id.list_folder);
-
-			listItemView.count = (TextView) convertView.findViewById(R.id.list_count);
-			listItemView.path = (TextView) convertView.findViewById(R.id.list_path);
-			listItemView.date = (TextView) convertView.findViewById(R.id.list_date);
-
+			listItemView.image = (ImageView) convertView.findViewById(R.id.grid_image);
+			// listItemView.date = (TextView)
+			// convertView.findViewById(R.id.list_title);
 			// 设置自定义视图至布局文件
 			convertView.setTag(listItemView);
 
@@ -120,12 +112,9 @@ public class ListAdapter extends BaseAdapter {
 
 		// 设置值
 		listItemView.image.setImageBitmap((Bitmap) listItem.get(position).get(DictParam.IMAGE));
-		listItemView.folder.setText((String) listItem.get(position).get(DictParam.FOLDER));
-		listItemView.path.setText((String) listItem.get(position).get(DictParam.PATH));
-
-		listItemView.count.setText((String) listItem.get(position).get(DictParam.COUNT));
-		listItemView.date.setText((String) listItem.get(position).get(DictParam.DATE));
-		listItemView.setFolderId((String) listItem.get(position).get(DictParam.FOLDER_ID));
+		// listItemView.date.setText((String)
+		// listItem.get(position).get(DictParam.DATE));
+		listItemView.setPath((String) listItem.get(position).get(DictParam.PATH));
 		return convertView;
 	}
 }

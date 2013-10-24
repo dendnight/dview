@@ -1,7 +1,8 @@
-package gmail.dendnight.dview;
+package gmail.dendnight.dview.ui;
 
-import gmail.dendnight.utils.DictParam;
-import gmail.dendnight.utils.GalleryUtil;
+import gmail.dendnight.dview.R;
+import gmail.dendnight.dview.data.Images;
+import gmail.dendnight.dview.dict.DictParam;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 /**
- * 图库列表
+ * 网格显示
  * 
  * <pre>
  * Description
@@ -40,7 +41,7 @@ public class GridActivity extends Activity {
 		String folderId = intent.getStringExtra(DictParam.FOLDER_ID);
 
 		// 值
-		GridAdapter listAdapter = new GridAdapter(getApplicationContext(), GalleryUtil.gridData(getContentResolver(),
+		GridAdapter listAdapter = new GridAdapter(getApplicationContext(), Images.gridData(getContentResolver(),
 				folderId));
 
 		// 设置值至GridView容器
