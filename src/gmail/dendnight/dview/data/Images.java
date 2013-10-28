@@ -2,13 +2,11 @@ package gmail.dendnight.dview.data;
 
 import gmail.dendnight.dview.dict.DictParam;
 import gmail.dendnight.dview.utils.BitmapUtil;
+import gmail.dendnight.dview.utils.MobileUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import android.content.ContentResolver;
@@ -33,6 +31,17 @@ import android.provider.MediaStore;
  * </pre>
  */
 public class Images {
+
+	// 位图
+	static Bitmap bitmap = null;
+	// 原图片路径
+	static String path = null;
+	// 缩略图路径
+	static String thumbnail = null;
+	// 同一文件夹图片数量
+	static String count = null;
+	// 时间
+	static String date = null;
 
 	/**
 	 * 获取主页相关数据
@@ -69,16 +78,13 @@ public class Images {
 		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
 		while (cursor.moveToNext()) {
 
-			// 原图片路径
-			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+			path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
 
-			// 缩略图路径
-			String thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
+			thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
 			if (null == thumbnail || "".equals(thumbnail.trim())) {
 				thumbnail = path;
 			}
-			// 位图
-			Bitmap bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
+			bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
 
 			// 父文件夹路径 "/storage/sdcard/DCIM/2343311610103519.jpg"; "/sdcard/"
 			if (path.startsWith("/storage/")) {
@@ -95,16 +101,11 @@ public class Images {
 			// 文件夹标题
 			String folder = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
 
-			// 同一文件夹图片数量
-			String count = "(" + cursor.getString(cursor.getColumnIndex(DictParam.COUNT)) + ")";
+			count = "(" + cursor.getString(cursor.getColumnIndex(DictParam.COUNT)) + ")";
 
 			// 最后编辑时间
 			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
-			Calendar ca = Calendar.getInstance();
-			ca.setTimeInMillis(taken);
-
-			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-			String date = f.format(ca.getTime());
+			date = MobileUtil.fDate("yyyy-MM-dd HH:mm", taken);
 
 			// 文件夹编号
 			String folderId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
@@ -163,23 +164,19 @@ public class Images {
 		while (cursor.moveToNext()) {
 
 			// 原图片路径
-			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+			path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
 
 			// 缩略图路径
-			String thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
+			thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
 			if (null == thumbnail || "".equals(thumbnail.trim())) {
 				thumbnail = path;
 			}
 			// 位图
-			Bitmap bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
+			bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
 
 			// 最后编辑时间
 			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
-			Calendar ca = Calendar.getInstance();
-			ca.setTimeInMillis(taken);
-
-			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-			String date = f.format(ca.getTime());
+			date = MobileUtil.fDate("yyyy-MM-dd HH:mm", taken);
 
 			map = new HashMap<String, Object>();
 			map.put(DictParam.IMAGE, bitmap);
