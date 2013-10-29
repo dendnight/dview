@@ -3,12 +3,10 @@ package gmail.dendnight.dview.ui;
 import gmail.dendnight.dview.R;
 import gmail.dendnight.dview.data.Images;
 import gmail.dendnight.dview.dict.DictParam;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
+import gmail.dendnight.dview.utils.MobileUtil;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -32,6 +30,7 @@ import android.webkit.WebView;
  */
 public class WebActivity extends Activity {
 
+	@SuppressLint("JavascriptInterface")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,22 +45,24 @@ public class WebActivity extends Activity {
 		data.append("<html><head><title>list</title><meta name=\"Author\" content=\"dendnight\"></head><body>");
 
 		String oldDate = null;
+		// 原图片路径
+		String path = null;
+		// 缩略图路径
+		String thumbnail = null;
+		// 日期
+		String date = null;
+		// 最后编辑时间
+		long taken = 0l;
 		while (cursor.moveToNext()) {
 
-			// 原图片路径
-			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-			// 缩略图路径
-			String thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
+			path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+			thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
 			if (null == thumbnail || "".equals(thumbnail.trim())) {
 				thumbnail = path;
 			}
-			// 最后编辑时间
-			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
-			Calendar ca = Calendar.getInstance();
-			ca.setTimeInMillis(taken);
+			taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
 
-			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-			String date = f.format(ca.getTime());
+			date = MobileUtil.fDate("MM-dd", taken);
 
 			// 时间相同的图片
 			if (null == oldDate || !oldDate.equals(date)) {
@@ -70,7 +71,9 @@ public class WebActivity extends Activity {
 			if (null != date) {
 				oldDate = date;
 			}
-			data.append("<img src=\"" + thumbnail + "\" style=\"width:100xp;height:100px;\"/>");
+			data.append("<img src=\"" + thumbnail
+					+ "\" style=\"width:110px;height:110px;\" onclick=\"window.imagelistner.openImage('" + path
+					+ "');return false;\"/>");
 
 		}
 		// 关闭cursor
@@ -85,7 +88,26 @@ public class WebActivity extends Activity {
 
 		// 显示本地网页
 		webView.loadDataWithBaseURL(baseUrl, data.toString(), "text/html", "UTF-8", null);
+		webView.addJavascriptInterface(new JavascriptInterface(this), "imagelistner");
 		// webView.loadUrl("file:///android_asset/test.html");
+	}
+
+	// js通信接口
+	class JavascriptInterface {
+
+		private Context context;
+
+		public JavascriptInterface(Context context) {
+			this.context = context;
+		}
+
+		public void openImage(String path) {
+			//
+			Intent intent = new Intent();
+			intent.putExtra(DictParam.PATH, path);
+			intent.setClass(context, DetailActivity.class);
+			context.startActivity(intent);
+		}
 	}
 
 }

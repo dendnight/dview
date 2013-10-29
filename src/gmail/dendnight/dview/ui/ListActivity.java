@@ -32,6 +32,9 @@ import android.widget.ListView;
  */
 public class ListActivity extends Activity {
 
+	// ≤Àµ•«–ªª
+	String s = "GRID";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,8 +64,11 @@ public class ListActivity extends Activity {
 
 				Intent intent = new Intent();
 				intent.putExtra(DictParam.FOLDER_ID, (String) hashMap.get(DictParam.FOLDER_ID));
-				intent.setClass(ListActivity.this, GridActivity.class);
-				// intent.setClass(MainActivity.this, WebActivity.class);
+				if ("GRID".equals(s)) {
+					intent.setClass(ListActivity.this, GridActivity.class);
+				} else {
+					intent.setClass(ListActivity.this, WebActivity.class);
+				}
 				startActivity(intent);
 			}
 		});
@@ -81,7 +87,16 @@ public class ListActivity extends Activity {
 		if (item.getItemId() == R.id.action_exit) {
 			ListActivity.this.finish();
 		}
+		// «–ªª◊”“≥√Êœ‘ æ
+		if (item.getItemId() == R.id.action_switch) {
+			if ("GRID".equals(s)) {
+				s = "WEB";
+				item.setTitle(R.string.action_grid);
+			} else {
+				s = "GRID";
+				item.setTitle(R.string.action_web);
+			}
+		}
 		return super.onMenuItemSelected(featureId, item);
 	}
-
 }

@@ -7,5 +7,7 @@
     <string name="action_image">图片</string>
     <string name="action_ok">确定</string>
     <string name="action_cancel">取消</string>
+    <string name="action_grid">网格</string>
+    <string name="action_web">网页</string>
 
 </resources>

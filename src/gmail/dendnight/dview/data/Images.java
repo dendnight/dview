@@ -42,6 +42,12 @@ public class Images {
 	static String count = null;
 	// 时间
 	static String date = null;
+	// 文件夹标题
+	static String folder = null;
+	// 最后编辑时间
+	static long taken = 0l;
+	// 文件夹编号
+	static String folderId = null;
 
 	/**
 	 * 获取主页相关数据
@@ -98,17 +104,15 @@ public class Images {
 				path = path.substring(0, path.lastIndexOf("/") + 1);
 			}
 
-			// 文件夹标题
-			String folder = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
+			folder = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
 
 			count = "(" + cursor.getString(cursor.getColumnIndex(DictParam.COUNT)) + ")";
 
 			// 最后编辑时间
-			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+			taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
 			date = MobileUtil.fDate("yyyy-MM-dd HH:mm", taken);
 
-			// 文件夹编号
-			String folderId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
+			folderId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
 
 			map = new HashMap<String, Object>();
 			map.put(DictParam.IMAGE, bitmap);
@@ -174,8 +178,7 @@ public class Images {
 			// 位图
 			bitmap = BitmapUtil.getBitmap(thumbnail, DictParam.WIDTH, DictParam.HEIGHT);
 
-			// 最后编辑时间
-			long taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+			taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
 			date = MobileUtil.fDate("yyyy-MM-dd HH:mm", taken);
 
 			map = new HashMap<String, Object>();
