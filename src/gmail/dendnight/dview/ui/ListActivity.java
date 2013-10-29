@@ -33,7 +33,7 @@ import android.widget.ListView;
 public class ListActivity extends Activity {
 
 	// ≤Àµ•«–ªª
-	String s = "GRID";
+	String s = DictParam.GRID;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class ListActivity extends Activity {
 
 				Intent intent = new Intent();
 				intent.putExtra(DictParam.FOLDER_ID, (String) hashMap.get(DictParam.FOLDER_ID));
-				if ("GRID".equals(s)) {
+				if (DictParam.GRID.equals(s)) {
 					intent.setClass(ListActivity.this, GridActivity.class);
 				} else {
 					intent.setClass(ListActivity.this, WebActivity.class);
@@ -89,11 +89,11 @@ public class ListActivity extends Activity {
 		}
 		// «–ªª◊”“≥√Êœ‘ æ
 		if (item.getItemId() == R.id.action_switch) {
-			if ("GRID".equals(s)) {
-				s = "WEB";
+			if (DictParam.GRID.equals(s)) {
+				s = DictParam.WEB;
 				item.setTitle(R.string.action_grid);
 			} else {
-				s = "GRID";
+				s = DictParam.GRID;
 				item.setTitle(R.string.action_web);
 			}
 		}

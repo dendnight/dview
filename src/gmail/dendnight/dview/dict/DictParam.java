@@ -53,4 +53,10 @@ public class DictParam {
 	/** Í¼Æ¬¿í¶È */
 	public static final Integer WIDTH = 128;
 
+	/** ±í¸ñ */
+	public static final String GRID = "gird";
+
+	/** ÍøÒ³ */
+	public static final String WEB = "web";
+
 }

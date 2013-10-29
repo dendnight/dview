@@ -73,7 +73,7 @@ public class WebActivity extends Activity {
 			}
 			data.append("<img src=\"" + thumbnail
 					+ "\" style=\"width:110px;height:110px;\" onclick=\"window.imagelistner.openImage('" + path
-					+ "');return false;\"/>");
+					+ "');return false;\"/>&nbsp;");
 
 		}
 		// ¹Ø±Õcursor

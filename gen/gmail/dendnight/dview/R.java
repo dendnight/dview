@@ -26,9 +26,9 @@ public final class R {
     public static final class id {
         public static final int action_exit=0x7f08000e;
         public static final int action_switch=0x7f08000d;
-        public static final int gallery=0x7f080000;
         public static final int gridView=0x7f080001;
         public static final int grid_image=0x7f080002;
+        public static final int image=0x7f080000;
         public static final int imageIcon=0x7f08000a;
         public static final int listView=0x7f080004;
         public static final int list_count=0x7f080007;

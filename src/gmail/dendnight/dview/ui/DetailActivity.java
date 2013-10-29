@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 /**
@@ -31,6 +32,9 @@ public class DetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Òþ²Ø×´Ì¬À¸
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		// Òþ²Ø±êÌâ
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_detail);
 
@@ -39,8 +43,8 @@ public class DetailActivity extends Activity {
 
 		Bitmap bitmap = BitmapFactory.decodeFile(path);
 
-		ImageView gallery = (ImageView) findViewById(R.id.gallery);
+		ImageView imageView = (ImageView) findViewById(R.id.image);
 
-		gallery.setImageBitmap(bitmap);
+		imageView.setImageBitmap(bitmap);
 	}
 }
