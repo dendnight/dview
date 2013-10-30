@@ -6,7 +6,6 @@ import gmail.dendnight.dview.dict.DictParam;
 import gmail.dendnight.dview.utils.MobileUtil;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -62,7 +61,7 @@ public class WebActivity extends Activity {
 			}
 			taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
 
-			date = MobileUtil.fDate("MM-dd", taken);
+			date = MobileUtil.fDate("yyyy年MM月dd日", taken);
 
 			// 时间相同的图片
 			if (null == oldDate || !oldDate.equals(date)) {
@@ -88,25 +87,19 @@ public class WebActivity extends Activity {
 
 		// 显示本地网页
 		webView.loadDataWithBaseURL(baseUrl, data.toString(), "text/html", "UTF-8", null);
-		webView.addJavascriptInterface(new JavascriptInterface(this), "imagelistner");
+		webView.addJavascriptInterface(new JavascriptInterface(), "imagelistner");
 		// webView.loadUrl("file:///android_asset/test.html");
 	}
 
 	// js通信接口
 	class JavascriptInterface {
 
-		private Context context;
-
-		public JavascriptInterface(Context context) {
-			this.context = context;
-		}
-
 		public void openImage(String path) {
 			//
 			Intent intent = new Intent();
 			intent.putExtra(DictParam.PATH, path);
-			intent.setClass(context, DetailActivity.class);
-			context.startActivity(intent);
+			intent.setClass(WebActivity.this, DetailActivity.class);
+			WebActivity.this.startActivity(intent);
 		}
 	}
 
