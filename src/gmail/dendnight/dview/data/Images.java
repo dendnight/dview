@@ -33,21 +33,27 @@ import android.provider.MediaStore;
 public class Images {
 
 	// 位图
-	static Bitmap bitmap = null;
+	private static Bitmap bitmap = null;
 	// 原图片路径
-	static String path = null;
+	private static String path = null;
 	// 缩略图路径
-	static String thumbnail = null;
+	private static String thumbnail = null;
 	// 同一文件夹图片数量
-	static String count = null;
+	private static String count = null;
 	// 时间
-	static String date = null;
+	private static String date = null;
 	// 文件夹标题
-	static String folder = null;
+	private static String folder = null;
 	// 最后编辑时间
-	static long taken = 0l;
+	private static long taken = 0l;
 	// 文件夹编号
-	static String folderId = null;
+	private static String folderId = null;
+	// 图片路径
+	private static Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+	// 之前的时间
+	private static String oldDate = null;
+	// 结果集
+	private static Cursor cursor = null;
 
 	/**
 	 * 获取主页相关数据
@@ -58,9 +64,6 @@ public class Images {
 	public static List<Map<String, Object>> listData(ContentResolver contentResolver) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = null;
-
-		// 图片路径
-		Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
 		// 文件夹下的图片数量
 		String sqlCount = "COUNT(" + MediaStore.Images.Media._ID + ") as " + DictParam.COUNT;
@@ -81,7 +84,7 @@ public class Images {
 		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " desc";
 
 		// 查询
-		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
+		cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
 		while (cursor.moveToNext()) {
 
 			path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
@@ -144,10 +147,6 @@ public class Images {
 
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = null;
-
-		// 图片路径
-		Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
 		// 缩略图路径
 		String thumbnailUrl = "(SELECT _data FROM thumbnails WHERE thumbnails.image_id = images._id) AS "
 				+ DictParam.THUMBNAIL;
@@ -163,8 +162,7 @@ public class Images {
 		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " desc";
 
 		// 查询
-		Cursor cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
-		String oldDate = null;
+		cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
 		while (cursor.moveToNext()) {
 
 			// 原图片路径
@@ -199,19 +197,17 @@ public class Images {
 	}
 
 	/**
-	 * 按文件夹ID查询对应数据
+	 * 按文件夹ID查询对应数据拼接成html
 	 * 
 	 * @param contentResolver
 	 * @param folderId
 	 * @return
 	 */
-	public static Cursor webGallery(ContentResolver contentResolver, String folderId) {
+	public static String webGallery(ContentResolver contentResolver, String folderId) {
 		if (null == folderId || "".equals(folderId.trim())) {
 			return null;
 		}
 
-		// 图片路径
-		Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 		// 缩略图路径
 		String thumbnailUrl = "(SELECT _data FROM thumbnails WHERE thumbnails.image_id = images._id) AS "
 				+ DictParam.THUMBNAIL;
@@ -226,7 +222,36 @@ public class Images {
 		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " desc";
 
 		// 查询
-		return MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
+		cursor = MediaStore.Images.Media.query(contentResolver, uri, projection, where, orderBy);
+		StringBuilder data = new StringBuilder();
+		data.append("<html><head><title>list</title><meta name=\"Author\" content=\"dendnight\"></head><body>");
 
+		while (cursor.moveToNext()) {
+
+			path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+			thumbnail = cursor.getString(cursor.getColumnIndex(DictParam.THUMBNAIL));
+			if (null == thumbnail || "".equals(thumbnail.trim())) {
+				thumbnail = path;
+			}
+			taken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+
+			date = MobileUtil.fDate("yyyy年MM月dd日", taken);
+
+			// 时间相同的图片
+			if (null == oldDate || !oldDate.equals(date)) {
+				data.append("<h3>" + date + "</h3>");
+			}
+			if (null != date) {
+				oldDate = date;
+			}
+			data.append("<img src=\"" + thumbnail
+					+ "\" style=\"width:110px;height:110px;\" onclick=\"window.imagelistner.openImage('" + path
+					+ "');return false;\"/>&nbsp;");
+
+		}
+		// 关闭cursor
+		cursor.close();
+		data.append("</body>");
+		return data.toString();
 	}
 }
